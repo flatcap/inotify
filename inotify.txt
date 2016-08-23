@@ -1,0 +1,14 @@
+# Each used inotify watch takes up 540 bytes (32-bit system), or 1 kB (on 64-bit)
+
+# Number of watches allowed
+cat /proc/sys/fs/inotify/max_user_watches
+
+# temporary change (as root)
+sysctl fs.inotify.max_user_watches=NUM
+
+# permanent change (as root)
+echo NUM > /proc/sys/fs/inotify/max_user_watches
+
+# find users of inotify
+for i in /proc/*/fd/*; do readlink -f $i; done | grep anon_inode:inotify
+
